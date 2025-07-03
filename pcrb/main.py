@@ -1,6 +1,7 @@
 from .utils import is_valid_memo
 from .robot import Robot
 from .controller import GameController
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 
 def robot_logic(robot, game_info, memos):
@@ -27,11 +28,11 @@ def main():
 
     _x = controller.robot1_initial_position['x']
     _y = controller.robot1_initial_position['y']
-    robot1 = Robot("Robot A", _x, _y, robot_logic, controller)
+    robot1 = Robot(PLAYER_ROBOT_NAME, _x, _y, robot_logic, controller)
 
     _x = controller.robot2_initial_position['x']
     _y = controller.robot2_initial_position['y']
-    robot2 = Robot("Robot B", _x, _y, robot_logic, controller)
+    robot2 = Robot(ENEMY_ROBOT_NAME, _x, _y, robot_logic, controller)
 
     controller.set_robots(robot1, robot2)
     controller.game_loop()

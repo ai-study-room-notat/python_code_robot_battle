@@ -8,6 +8,7 @@ from app import load_player_module
 from app import play_game
 from app import game_state_download_button
 from pages.drawer import st_draw_board
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 # ----------------------------- メイン UI -----------------------------
 
@@ -83,9 +84,9 @@ def main() -> None:
         # --- ゲーム開始 ---
         if 'winner' not in st.session_state:
             st.success("✅ コードの読み込みに成功しました！ 対戦を開始します。")
-            st.session_state.winner, st.session_state.game_state = play_game(player_robot_logic, enemy_robot_logic)
+            st.session_state.winner, st.session_state.game_state = play_game(player_robot_logic, enemy_robot_logic, PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME)
 
-        if st.session_state.winner.name == "Robot A":
+        if st.session_state.winner.name == PLAYER_ROBOT_NAME:
             if 'balloons_shown' not in st.session_state or not st.session_state.balloons_shown:
                 st.balloons()
                 st.session_state.balloons_shown = True
@@ -95,7 +96,7 @@ def main() -> None:
 
         # ゲーム結果ダウンロード
         st.subheader("ログとゲーム状態のダウンロード")
-        st.write("ログ内では'Robot A'があなたがアップロードしたロボットです。")
+        st.write(f"ログ内では'{PLAYER_ROBOT_NAME}'があなたがアップロードしたロボットです。")
         game_state_download_button(st.session_state.game_state)
 
         # 盤面描画

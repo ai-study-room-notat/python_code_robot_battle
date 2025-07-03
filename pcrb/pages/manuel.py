@@ -1,4 +1,5 @@
 import streamlit as st
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 DOCUMENT = '''
 # ゲーム説明書

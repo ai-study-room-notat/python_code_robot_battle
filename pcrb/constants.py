@@ -1,0 +1,7 @@
+# ロボット名の定数
+PLAYER_ROBOT_NAME = "Player Robot"
+ENEMY_ROBOT_NAME = "Enemy Robot"
+
+# 旧名との互換性（必要なら）
+ROBOT_A_NAME = PLAYER_ROBOT_NAME
+ROBOT_B_NAME = ENEMY_ROBOT_NAME

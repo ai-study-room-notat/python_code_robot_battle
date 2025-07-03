@@ -5,6 +5,7 @@ sys.path.append('./')
 
 from pcrb.robot import Robot
 from pcrb.controller import GameController
+from pcrb.constants import PLAYER_ROBOT_NAME
 
 
 def robot_logic(robot, game_info, memos):
@@ -18,7 +19,7 @@ def test_teleport():
     controller = GameController()
 
     # ロボットの初期位置
-    robot_a = Robot("Robot A", 1, 1, robot_logic, controller)
+    robot_a = Robot(PLAYER_ROBOT_NAME, 1, 1, robot_logic, controller)
     robot_b = Robot("Robot B", 1, 2, robot_logic, controller)
 
     controller.set_robots(robot_a, robot_b)

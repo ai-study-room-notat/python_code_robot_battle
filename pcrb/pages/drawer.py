@@ -5,6 +5,7 @@ import sys
 sys.path.append('./pcrb')
 
 from draw import draw_board_v2 as draw_board
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 def st_draw_board(data):
     title_holder = st.empty()
@@ -66,7 +67,15 @@ def st_draw_board(data):
     title = f"Turn {turn_data['turn']} - Action: {_action['robot_name']} -> {_action['action']}"
     title_holder.header(title)
 
-    fig = draw_board(turn_data, x_max, y_max, title='', is_show=False)
+    # 先攻・後攻ロボット名をログから取得
+    if len(all_turn_data) > 0 and 'robots' in all_turn_data[0]:
+        red_robot_name = all_turn_data[0]['robots'][0]['name']
+        blue_robot_name = all_turn_data[0]['robots'][1]['name']
+    else:
+        red_robot_name = PLAYER_ROBOT_NAME
+        blue_robot_name = ENEMY_ROBOT_NAME
+
+    fig = draw_board(turn_data, x_max, y_max, red_robot_name=red_robot_name, blue_robot_name=blue_robot_name, title='', is_show=False)
     board_holder.pyplot(fig)
 
 
