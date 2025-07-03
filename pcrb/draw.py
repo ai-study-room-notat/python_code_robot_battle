@@ -6,6 +6,7 @@ from typing import Dict, List, Tuple
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.offsetbox import AnnotationBbox, OffsetImage
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 ###############################################################################
 # ユーティリティ関数
@@ -146,17 +147,17 @@ def _collect_action_targets(
 # 散布図ベースのボード (v1)
 ###############################################################################
 
-def draw_board(turn_data: dict, x_max: int, y_max: int, *, title: str = "", is_show: bool = True):
+def draw_board(turn_data: dict, x_max: int, y_max: int, *, red_robot_name: str, blue_robot_name: str, title: str = "", is_show: bool = True):
     """散布図を用いたシンプルな可視化関数。"""
 
     # 共通情報生成
     robot_positions = _collect_robot_positions(turn_data)
     markers = _collect_action_targets(turn_data, x_max, y_max, robot_positions)
 
-    # ボード初期化: 0 = 空, 1 = Robot A, 2 = Robot B
+    # ボード初期化: 0 = 空, 1 = 赤ロボット, 2 = 青ロボット
     board = np.zeros((y_max, x_max))
     for name, (x, y) in robot_positions.items():
-        board[y, x] = 1 if name == "Robot A" else 2
+        board[y, x] = 1 if name == red_robot_name else 2
 
     # Figure
     plt.figure(figsize=(6, 6))
@@ -201,6 +202,8 @@ def draw_board_v2(
     x_max: int,
     y_max: int,
     *,
+    red_robot_name: str,
+    blue_robot_name: str,
     title: str = "",
     is_show: bool = True,
 ):
@@ -254,7 +257,7 @@ def draw_board_v2(
     # ロボット描画
     # ----------------------------------------------------------------------
     for name, (x, y) in robot_positions.items():
-        if name == "Robot A":
+        if name == red_robot_name:
             sprite = sprites["robot_a"]
             fallback = "white"
         else:

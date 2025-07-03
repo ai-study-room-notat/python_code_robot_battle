@@ -12,6 +12,7 @@ sys.path.append('./pcrb')
 from app import is_safe_code
 from app import load_player_module
 from app import play_game
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 ROBOTS_DIR = "./pcrb/robots"
 
@@ -63,16 +64,16 @@ def battle_with_saved_robots(player_robot_logic):
                 enemy_robot_logic = getattr(module, "robot_logic")
 
                 # 先攻: プレイヤーロボット vs 敵ロボット
-                winner, game_state = play_game(player_robot_logic, enemy_robot_logic)
-                result, color = determine_result(winner, player_robot_name="Robot A", enemy_robot_name="Robot B")
+                winner, game_state = play_game(player_robot_logic, enemy_robot_logic, PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME)
+                result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
                 game_state_json = json.dumps(game_state, indent=4)
                 b64 = base64.b64encode(game_state_json.encode()).decode()
                 download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_first.json">Download</a>'
                 results.append((module_name + " (プレイヤー:先攻)", f'<span style="color:{color}; font-weight:bold;">{result}</span>', download_link))
 
                 # 後攻: 敵ロボット vs プレイヤーロボット
-                winner, game_state = play_game(enemy_robot_logic, player_robot_logic)
-                result, color = determine_result(winner, player_robot_name="Robot B", enemy_robot_name="Robot A")
+                winner, game_state = play_game(enemy_robot_logic, player_robot_logic, ENEMY_ROBOT_NAME, PLAYER_ROBOT_NAME)
+                result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
                 game_state_json = json.dumps(game_state, indent=4)
                 b64 = base64.b64encode(game_state_json.encode()).decode()
                 download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_second.json">Download</a>'
@@ -85,7 +86,7 @@ def battle_with_saved_robots(player_robot_logic):
     return results
 
 
-def determine_result(winner, player_robot_name="Robot A", enemy_robot_name="Robot B"):
+def determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME):
     """勝敗結果を判定する"""
     if winner.name == player_robot_name:
         return "勝利 🏆", "green"
@@ -133,8 +134,6 @@ def main():
         対戦結果は、先攻と後攻の両方で表示されます。各対戦の結果は、勝利、敗北、引き分けのいずれかになります。
         対戦結果は、勝利数と総試合数を含む表形式で表示されます。
         対戦結果のログは、JSON形式でダウンロード可能です。
-
-        Robot A が先攻、Robot B が後攻として対戦します。
         """
     )
 

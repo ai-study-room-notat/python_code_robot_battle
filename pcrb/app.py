@@ -5,6 +5,7 @@ import json
 
 from controller import GameController
 from robot import Robot
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 # 許可する関数とモジュール
 ALLOWED_FUNCTIONS = {"robot_logic"}
@@ -66,10 +67,10 @@ def load_player_module(file_content: str):
 
 # ----------------------------- ゲーム実行 -----------------------------
 
-def play_game(robot_logic_a, robot_logic_b):
+def play_game(robot1_logic, robot2_logic, robot1_name=PLAYER_ROBOT_NAME, robot2_name=ENEMY_ROBOT_NAME):
     controller = GameController(max_turn=100, x_max=9, y_max=7)
-    robot1 = Robot("Robot A", 1, 3, robot_logic_a, controller)
-    robot2 = Robot("Robot B", 7, 3, robot_logic_b, controller)
+    robot1 = Robot(robot1_name, 1, 3, robot1_logic, controller)
+    robot2 = Robot(robot2_name, 7, 3, robot2_logic, controller)
     controller.set_robots(robot1, robot2)
     winner, game_state = controller.game_loop()
     return winner, game_state

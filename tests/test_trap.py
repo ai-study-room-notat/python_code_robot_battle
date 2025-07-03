@@ -4,6 +4,7 @@ sys.path.append('./')
 
 from pcrb.robot import Robot
 from pcrb.controller import GameController
+from pcrb.constants import PLAYER_ROBOT_NAME
 
 
 def robot_logic(robot, game_info, memos):
@@ -39,7 +40,7 @@ def test_trap():
     controller = GameController()
 
     # ロボット1の初期位置
-    robot1 = Robot("Robot A", 1, 3, robot_logic, controller)
+    robot1 = Robot(PLAYER_ROBOT_NAME, 1, 3, robot_logic, controller)
 
     # ロボット2の初期位置
     robot2 = Robot("Robot B", 3, 3, robot_logic, controller)
@@ -57,13 +58,13 @@ def test_trap():
         controller.run_logic(robot2)
 
         # ログを確認
-        print(f"Turn {controller.turn}: Robot A Position: {robot1.position}, Robot B Position: {robot2.position}")
-        print(f"Robot A Traps: {robot1.trap.traps}, Robot B Traps: {robot2.trap.traps}")
+        print(f"Turn {controller.turn}: {PLAYER_ROBOT_NAME} Position: {robot1.position}, Robot B Position: {robot2.position}")
+        print(f"{PLAYER_ROBOT_NAME} Traps: {robot1.trap.traps}, Robot B Traps: {robot2.trap.traps}")
 
         # 敵が罠にかかった場合、HPの減少を確認
         if robot1.hp < initial_hp_robot1:
-            print(f"Robot A stepped on a trap! HP: {robot1.hp}")
-            assert robot1.hp < initial_hp_robot1, "Robot A's HP should decrease after stepping on a trap."
+            print(f"{PLAYER_ROBOT_NAME} stepped on a trap! HP: {robot1.hp}")
+            assert robot1.hp < initial_hp_robot1, f"{PLAYER_ROBOT_NAME}'s HP should decrease after stepping on a trap."
             assert (robot1.position not in robot2.trap.traps), "Trap should be removed after activation."
             trap_triggered = True
             break

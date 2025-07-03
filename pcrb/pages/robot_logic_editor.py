@@ -6,6 +6,7 @@ import traceback
 from controller import GameController
 from robot import Robot
 from draw import draw_board_v2 as draw_board
+from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 def main():
 
@@ -58,8 +59,8 @@ def main():
     # ------------------------------------------------------------------------
     if "controller" not in st.session_state:
         controller = GameController()
-        player     = Robot("Robot A",   1, 3, None, controller)
-        enemy      = Robot("Robot B", 7, 3, None, controller)
+        player     = Robot(PLAYER_ROBOT_NAME,   1, 3, None, controller)
+        enemy      = Robot(ENEMY_ROBOT_NAME, 7, 3, None, controller)
         controller.set_robots(player, enemy)
 
         st.session_state["controller"]     = controller
@@ -84,7 +85,7 @@ def main():
         current_turn_data = controller.game_state[-1]
         if "robots" in current_turn_data:
             fig_placeholder = st.empty()  # プレースホルダーを作成
-            fig = draw_board(current_turn_data, x_max, y_max, title="Current Game State", is_show=False)
+            fig = draw_board(current_turn_data, x_max, y_max, red_robot_name=PLAYER_ROBOT_NAME, blue_robot_name=ENEMY_ROBOT_NAME, title="Current Game State", is_show=False)
             fig_placeholder.pyplot(fig, use_container_width=True)
 
     left_col, right_col = st.columns(2)
@@ -211,7 +212,7 @@ def main():
             if controller.game_state:
                 current_turn_data = controller.game_state[-1]
                 if "robots" in current_turn_data:
-                    fig = draw_board(current_turn_data, x_max, y_max, title="Current Game State", is_show=False)
+                    fig = draw_board(current_turn_data, x_max, y_max, red_robot_name=PLAYER_ROBOT_NAME, blue_robot_name=ENEMY_ROBOT_NAME, title="Current Game State", is_show=False)
                     fig_placeholder.pyplot(fig, use_container_width=True)  # 上部の画像を更新
 
         # ----------------- 直前の敵アクション -----------------
