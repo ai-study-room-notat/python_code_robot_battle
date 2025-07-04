@@ -94,6 +94,7 @@ def main():
     from pages.robot_battle_page import main as robot_battle_page
     from pages.robot_logic_editor import main as robot_logic_editor_page
     from pages.tutorial import main as tutorial_page
+    from pages.local_battle_page import main as local_battle_page # Add local_battle_page
 
     page = st.navigation({
         "Main": [
@@ -102,6 +103,7 @@ def main():
             st.Page(manuel_page, title="Manual", icon="📖", url_path="manuel"),
             st.Page(drawer_page, title="Drawer", icon="🖌️", url_path="drawer"),
             st.Page(robot_battle_page, title="Robot Battle", icon="🤖", url_path="robot_battle_page"),
+            st.Page(local_battle_page, title="Local Battle", icon="🆚", url_path="local_battle_page"), # Add local_battle_page to navigation
             st.Page(robot_logic_editor_page, title="Logic Editor", icon="🛠️", url_path="robot_logic_editor"),
         ]
     }).run()
