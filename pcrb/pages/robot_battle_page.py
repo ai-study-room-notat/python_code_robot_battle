@@ -18,12 +18,12 @@ ROBOTS_DIR = "./pcrb/robots"
 
 
 def upload_and_display_file():
-    """ファイルをアップロードし、内容を表示する"""
+    """ファイルをアップロードし、内容を表示する（デフォルトで折りたたみ）"""
     uploaded_file = st.file_uploader("ロジックファイルをアップロードしてください", type=["py"])
     if uploaded_file:
         file_content = uploaded_file.read().decode("utf-8")
-        st.subheader("Uploaded Code")
-        st.code(file_content, language="python")
+        with st.expander("Uploaded Code", expanded=False):
+            st.code(file_content, language="python")
         return file_content
     return None
 
@@ -100,23 +100,23 @@ def display_results(results):
     """対戦結果を表示する"""
     st.subheader("🤖 対戦結果")
     if results:
-        # DataFrameを作成
-        df = pd.DataFrame(results, columns=["対戦相手", "結果", "ログ"])
-        df["結果"] = df["結果"].apply(lambda x: f'<p style="text-align:center;">{x}</p>')  # 結果を中央寄せ
-        df["ログ"] = df["ログ"].apply(lambda x: f'<p style="text-align:center;">{x}</p>')  # ログリンクを中央寄せ
-        st.markdown(df.to_html(escape=False, index=False), unsafe_allow_html=True)
-
         # 勝利数と総試合数を計算
         total_matches = len(results)
         wins = sum(1 for result in results if "勝利" in result[1])
 
-        # 勝敗結果を表示
+        # 勝敗結果を先に表示
         st.markdown(f"""
             <div style="text-align:center;">
                 <h2 style="margin:0;">勝利数: {wins} 勝</h2>
                 <p style="font-size:14px; color:gray;">(試合数: {total_matches} 戦)</p>
             </div>
         """, unsafe_allow_html=True)
+
+        # DataFrameを作成
+        df = pd.DataFrame(results, columns=["対戦相手", "結果", "ログ"])
+        df["結果"] = df["結果"].apply(lambda x: f'<p style="text-align:center;">{x}</p>')  # 結果を中央寄せ
+        df["ログ"] = df["ログ"].apply(lambda x: f'<p style="text-align:center;">{x}</p>')  # ログリンクを中央寄せ
+        st.markdown(df.to_html(escape=False, index=False), unsafe_allow_html=True)
     else:
         st.info("対戦相手が見つかりませんでした。")
 
