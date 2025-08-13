@@ -51,8 +51,8 @@ def get_robot_files():
     return [f for f in os.listdir(ROBOTS_DIR) if f.endswith(".py") and f != "__init__.py"]
 
 
-def battle_with_saved_robots(player_robot_logic):
-    """保存されているロボットと対戦する"""
+def battle_with_saved_robots(player_robot_logic, battle_count=1):
+    """保存されているロボットと対戦する（battle_count回ずつ）"""
     python_files = sorted(get_robot_files())
     results = []
 
@@ -63,21 +63,22 @@ def battle_with_saved_robots(player_robot_logic):
             if hasattr(module, "robot_logic"):
                 enemy_robot_logic = getattr(module, "robot_logic")
 
-                # 先攻: プレイヤーロボット vs 敵ロボット
-                winner, game_state = play_game(player_robot_logic, enemy_robot_logic, PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME)
-                result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
-                game_state_json = json.dumps(game_state, indent=4)
-                b64 = base64.b64encode(game_state_json.encode()).decode()
-                download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_first.json">Download</a>'
-                results.append((module_name + " (プレイヤー:先攻)", f'<span style="color:{color}; font-weight:bold;">{result}</span>', download_link))
+                for i in range(battle_count):
+                    # 先攻: プレイヤーロボット vs 敵ロボット
+                    winner, game_state = play_game(player_robot_logic, enemy_robot_logic, PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME)
+                    result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
+                    game_state_json = json.dumps(game_state, indent=4)
+                    b64 = base64.b64encode(game_state_json.encode()).decode()
+                    download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_first_{i+1}.json">Download</a>'
+                    results.append((f"{module_name} (プレイヤー:先攻, {i+1}戦目)", f'<span style="color:{color}; font-weight:bold;">{result}</span>', download_link))
 
-                # 後攻: 敵ロボット vs プレイヤーロボット
-                winner, game_state = play_game(enemy_robot_logic, player_robot_logic, ENEMY_ROBOT_NAME, PLAYER_ROBOT_NAME)
-                result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
-                game_state_json = json.dumps(game_state, indent=4)
-                b64 = base64.b64encode(game_state_json.encode()).decode()
-                download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_second.json">Download</a>'
-                results.append((module_name + " (プレイヤー:後攻)", f'<span style="color:{color}; font-weight:bold;">{result}</span>', download_link))
+                    # 後攻: 敵ロボット vs プレイヤーロボット
+                    winner, game_state = play_game(enemy_robot_logic, player_robot_logic, ENEMY_ROBOT_NAME, PLAYER_ROBOT_NAME)
+                    result, color = determine_result(winner, player_robot_name=PLAYER_ROBOT_NAME, enemy_robot_name=ENEMY_ROBOT_NAME)
+                    game_state_json = json.dumps(game_state, indent=4)
+                    b64 = base64.b64encode(game_state_json.encode()).decode()
+                    download_link = f'<a href="data:application/json;base64,{b64}" download="{module_name}_log_second_{i+1}.json">Download</a>'
+                    results.append((f"{module_name} (プレイヤー:後攻, {i+1}戦目)", f'<span style="color:{color}; font-weight:bold;">{result}</span>', download_link))
 
         except Exception as e:
             st.warning(f"Error loading robot module {module_name}: {traceback.format_exc()}")
@@ -145,8 +146,12 @@ def main():
     if file_content and validate_code(file_content):
         player_robot_logic = load_robot_logic(file_content)
         if player_robot_logic:
-            results = battle_with_saved_robots(player_robot_logic)
-            display_results(results)
+            st.subheader("対戦設定")
+            battle_count = st.selectbox("対戦回数を選択してください", options=list(range(1, 11)), index=0, format_func=lambda x: f"{x}回対戦")
+            start_battle = st.button("対戦開始")
+            if start_battle:
+                results = battle_with_saved_robots(player_robot_logic, battle_count)
+                display_results(results)
         else:
             st.error("No function named `robot_logic` found in the uploaded file.")
     else:
