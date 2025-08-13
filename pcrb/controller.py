@@ -98,6 +98,8 @@ class GameController:
         robot.start_turn()
         if action == "rest":
             robot.rest(self.turn)
+        elif action == "super_rest":
+            robot.super_rest(self.turn)
         elif action == "attack":
             robot.attack(enemy, self.turn)
         elif action == "defend":

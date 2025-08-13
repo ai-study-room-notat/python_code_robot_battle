@@ -98,6 +98,8 @@ def _collect_action_targets(
 
     elif action == "rest":
         targets["rest"].append((ry, rx))
+    elif action == "super_rest":
+        targets["super_rest"].append((ry, rx))
 
     elif action in {"right", "left", "down", "up"}:
         dx, dy = _direction_offset(action)
@@ -172,6 +174,7 @@ def draw_board(turn_data: dict, x_max: int, y_max: int, *, red_robot_name: str, 
     colour_map = {
         "attack": "red",
         "rest": "green",
+        "super_rest": "green",
         "move": "black",
         "defend": "yellow",
         "parry": "cyan",
@@ -223,6 +226,7 @@ def draw_board_v2(
         "robot_b": safe_load_image(os.path.join(asset_dir, "blue_robot.png")),
         "attack": safe_load_image(os.path.join(asset_dir, "attack.png")),
         "rest": safe_load_image(os.path.join(asset_dir, "rest.png")),
+        "super_rest": safe_load_image(os.path.join(asset_dir, "rest.png")),
         "move": safe_load_image(os.path.join(asset_dir, "move.png")),
         "defend": safe_load_image(os.path.join(asset_dir, "defend.png")),
         "parry": safe_load_image(os.path.join(asset_dir, "parry.png")),
@@ -271,6 +275,7 @@ def draw_board_v2(
     colour_fallback = {
         "attack": "red",
         "rest": "green",
+        "super_rest": "green",
         "move": "black",
         "defend": "yellow",
         "parry": "cyan",

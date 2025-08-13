@@ -9,6 +9,7 @@ from actions import Steal
 from actions import Teleport
 from actions import Camouflage
 from actions import Scan
+from actions import SuperRest
 
 
 class Robot:
@@ -31,6 +32,7 @@ class Robot:
         self.teleport = Teleport(self, controller)
         self.camouflage = Camouflage(self, controller)
         self.scan = Scan(self, controller)
+        self.super_rest = SuperRest(self, controller)
 
         self.robot_logic = robot_logic_function
         self.controller = controller
@@ -71,8 +73,9 @@ class Robot:
         """攻撃を受ける
         :param damage: 攻撃のダメージ量
         """
-        # if self._defense_mode:
-        #     damage *= self._defense_reduction
+        if self.super_rest.is_active:
+            damage *= 1.5  # 超休息直後はダメージ1.5倍
+            self.super_rest.reset()  # 攻撃されたらフラグ解除
         if self.defend.is_active:
             damage *= self.defend.reduction
         self._hp -= max(damage, 0)
@@ -100,6 +103,7 @@ class Robot:
     def start_turn(self):
         """ターン開始時にロボットの状態を更新"""
         self.stun_update()
+        self.super_rest.reset()  # 超休息効果をターン開始時に解除
 
         if self.defend.is_active:
             print(f"{self._name} ends defense mode.")

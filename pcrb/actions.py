@@ -317,3 +317,19 @@ class Scan(Action):
             if self.remaining_turns <= 0:
                 self.is_active = False
                 self.controller.log_action(self.controller.turn, f"{self.actor.name}'s scan effect has worn off.")
+
+
+class SuperRest(Action):
+    recovery_value = 30  # 通常休息より多く回復
+
+    def __init__(self, actor, controller):
+        super().__init__(actor, controller)
+        self.is_active = False
+
+    def __call__(self, turn):
+        self.actor.recovery_sp(self.recovery_value)
+        self.is_active = True  # 攻撃時のダメージ倍率用フラグ
+        self.controller.log_action(turn, f"{self.actor.name} super rests and recovers {self.recovery_value} SP. Total SP: {self.actor.sp}")
+
+    def reset(self):
+        self.is_active = False

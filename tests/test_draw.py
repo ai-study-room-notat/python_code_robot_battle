@@ -25,7 +25,7 @@ def mock_turn_data():
     return generate_turn_data
 
 @pytest.mark.parametrize("action", [
-    "attack", "rest", "up", "down", "left", "right", "defend", "parry", 
+    "attack", "rest", "super_rest", "up", "down", "left", "right", "defend", "parry", 
     "ranged_attack", "trap_right", "steal", 
     "teleport", "camouflage", "scan"
 ])
