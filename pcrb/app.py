@@ -1,10 +1,14 @@
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import streamlit as st
 import ast
 import traceback
 import json
 
-from controller import GameController
-from robot import Robot
+from pcrb.controller import GameController
+from pcrb.robot import Robot
 from pcrb.constants import PLAYER_ROBOT_NAME, ENEMY_ROBOT_NAME
 
 # 許可する関数とモジュール
